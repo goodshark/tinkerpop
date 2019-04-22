@@ -112,7 +112,7 @@ public class TinyVertex extends TinyElement implements Vertex {
         List<String> strs = new ArrayList<>();
         if (propertyKeys.length != 0) {
             for (String propKey : propertyKeys)
-                strs = TinyHelper.getVertexProperty(this, id(), propKey);
+                strs.addAll(TinyHelper.getVertexProperty(this, id(), propKey));
         } else {
             // get all VertexProperty belongs to the Vertex
             strs = TinyHelper.getVertexProperty(this, id());
