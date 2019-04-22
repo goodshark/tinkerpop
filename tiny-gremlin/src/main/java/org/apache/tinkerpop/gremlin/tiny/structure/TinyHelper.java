@@ -114,7 +114,9 @@ public class TinyHelper {
         String[] strs = vertextFullName.split("-");
         String vertexPropertiesKey = "v-" + strs[1] + "-properties";
         String vpListName = graph.getBaseStore().hget(vertexPropertiesKey, key);
-        List<String> vPstrList = graph.getBaseStore().lrange(vpListName, 0, -1);
+        List<String> vPstrList = new ArrayList<>();
+        if (vpListName != null)
+            vPstrList = graph.getBaseStore().lrange(vpListName, 0, -1);
         return vPstrList;
     }
 
