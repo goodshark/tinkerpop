@@ -39,17 +39,27 @@ import java.util.List;
 public final class TinyGraph implements Graph {
     public static final Logger LOGGER = LoggerFactory.getLogger(TinyGraph.class);
 
-    private Jedis baseStore = new Jedis("172.17.171.43", 6379);
+    public static String REDIS_HOST = "tinygraph.redis.host";
+    public static String REDIS_PORT = "tinygraph.redis.port";
+
+    private Jedis baseStore;
 
     protected TinyGraphVariables variables = null;
     private final Configuration configuration;
 
     private static final Configuration EMPTY_CONFIGURATION = new BaseConfiguration() {{
         this.setProperty(Graph.GRAPH, TinyGraph.class.getName());
+        this.setProperty(REDIS_HOST, "localhost");
+        this.setProperty(REDIS_PORT, 6379);
     }};
 
     private TinyGraph(final Configuration configuration) {
         this.configuration = configuration;
+        initRedis(configuration);
+    }
+
+    private void initRedis(Configuration conf) {
+        baseStore = new Jedis(conf.getString(REDIS_HOST), conf.getInt(REDIS_PORT));
     }
 
     public static TinyGraph open() {

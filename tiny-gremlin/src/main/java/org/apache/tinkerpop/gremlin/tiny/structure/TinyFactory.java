@@ -29,7 +29,13 @@ public final class TinyFactory {
     }
 
     public static TinyGraph createModern() {
-        final TinyGraph g = getMyGraphWithNumberManager();
+        final TinyGraph g = getTinyGraphWithConf(null, null);
+        generateModern(g);
+        return g;
+    }
+
+    public static TinyGraph createModern(String host, int port) {
+        final TinyGraph g = getTinyGraphWithConf(host, port);
         generateModern(g);
         return g;
     }
@@ -49,14 +55,28 @@ public final class TinyFactory {
         peter.addEdge("created", lop, "weight", 0.2d);
     }
 
-    private static TinyGraph getMyGraphWithNumberManager() {
-        final Configuration conf = getEmptyConfiguration();
+    private static TinyGraph getTinyGraphWithConf(String host, Integer port) {
+        Configuration conf;
+        if (host != null && port != null)
+            conf = getConfiguration(host, port);
+        else
+            conf = getEmptyConfiguration();
         return TinyGraph.open(conf);
     }
 
     private static Configuration getEmptyConfiguration() {
         final Configuration conf = new BaseConfiguration();
         conf.setProperty(Graph.GRAPH, TinyGraph.class.getName());
+        conf.setProperty(TinyGraph.REDIS_HOST, "localhost");
+        conf.setProperty(TinyGraph.REDIS_PORT, 6379);
+        return conf;
+    }
+
+    private static Configuration getConfiguration(String host, Integer port) {
+        final Configuration conf = new BaseConfiguration();
+        conf.setProperty(Graph.GRAPH, TinyGraph.class.getName());
+        conf.setProperty(TinyGraph.REDIS_HOST, host);
+        conf.setProperty(TinyGraph.REDIS_PORT, port);
         return conf;
     }
 }
