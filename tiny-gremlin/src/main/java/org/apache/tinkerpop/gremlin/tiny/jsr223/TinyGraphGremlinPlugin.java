@@ -29,6 +29,7 @@ public class TinyGraphGremlinPlugin extends AbstractGremlinPlugin {
     private static final ImportCustomizer imports = DefaultImportCustomizer.build()
             .addClassImports(TinyEdge.class,
                     TinyElement.class,
+                    TinyFactory.class,
                     TinyGraph.class,
                     TinyGraphVariables.class,
                     TinyHelper.class,

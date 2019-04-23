@@ -28,6 +28,14 @@ public final class TinyFactory {
     private TinyFactory() {
     }
 
+    public static TinyGraph getGraph() {
+        return getTinyGraphWithConf(null, null);
+    }
+
+    public static TinyGraph getGraph(String host, int port) {
+        return getTinyGraphWithConf(host, port);
+    }
+
     public static TinyGraph createModern() {
         final TinyGraph g = getTinyGraphWithConf(null, null);
         generateModern(g);
