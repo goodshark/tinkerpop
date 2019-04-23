@@ -44,6 +44,8 @@ public final class TinyGraph implements Graph {
 
     private Jedis baseStore;
 
+    private TinyGraphFeatures features = new TinyGraphFeatures();
+
     protected TinyGraphVariables variables = null;
     private final Configuration configuration;
 
@@ -68,6 +70,12 @@ public final class TinyGraph implements Graph {
 
     public static TinyGraph open(Configuration configuration) {
         return new TinyGraph(configuration);
+    }
+
+    public static TinyGraph open(String redisHost, int redisPort) {
+        EMPTY_CONFIGURATION.setProperty(REDIS_HOST, redisHost);
+        EMPTY_CONFIGURATION.setProperty(REDIS_PORT, redisPort);
+        return new TinyGraph(EMPTY_CONFIGURATION);
     }
 
     public Jedis getBaseStore() {
@@ -170,6 +178,11 @@ public final class TinyGraph implements Graph {
     @Override
     public Configuration configuration() {
         return null;
+    }
+
+    @Override
+    public Features features() {
+        return features;
     }
 
     public class TinyGraphFeatures implements Features {
