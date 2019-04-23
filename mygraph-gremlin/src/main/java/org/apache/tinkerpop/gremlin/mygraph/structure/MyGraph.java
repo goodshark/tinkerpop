@@ -48,6 +48,8 @@ public final class MyGraph implements Graph {
 
     private final Configuration configuration;
 
+    private MyGraphFeatures features = new MyGraphFeatures();
+
 
     protected AtomicLong currentId = new AtomicLong(-1L);
     protected Map<Object, Vertex> vertices = new ConcurrentHashMap<>();
@@ -303,6 +305,11 @@ public final class MyGraph implements Graph {
                 return true;
             }
         }
+    }
+
+    @Override
+    public Features features() {
+        return features;
     }
 
     public class MyGraphFeatures implements Features {
