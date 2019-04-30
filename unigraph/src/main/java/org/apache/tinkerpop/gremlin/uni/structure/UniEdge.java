@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class UniEdge extends UniElement implements Edge {
     protected long id;
@@ -98,7 +99,12 @@ public class UniEdge extends UniElement implements Edge {
 
     @Override
     public <V> Iterator<Property<V>> properties(String... propertyKeys) {
-        return null;
+        if (null == this.properties || properties.size() == 0) return Collections.emptyIterator();
+        if (propertyKeys.length == 1) {
+            final Property<V> property = this.properties.get(propertyKeys[0]);
+            return null == property ? Collections.emptyIterator() : IteratorUtils.of(property);
+        } else
+            return (Iterator) this.properties.entrySet().stream().filter(entry -> ElementHelper.keyExists(entry.getKey(), propertyKeys)).map(entry -> entry.getValue()).collect(Collectors.toList()).iterator();
     }
 
     @Override
@@ -113,6 +119,11 @@ public class UniEdge extends UniElement implements Edge {
         final Property<V> property = new UniProperty<>(this, key, value);
         properties.put(key, property);
         return property;
+    }
+
+    @Override
+    public <V> Property<V> property(final String key) {
+        return (null == this.properties || this.properties.size() == 0) ? Property.<V>empty() : this.properties.getOrDefault(key, Property.<V>empty());
     }
 
     @Override
