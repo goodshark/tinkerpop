@@ -221,8 +221,14 @@ public class UniHelper {
         return cnt;
     }
 
+    private static boolean isEmptyList(List<String> list) {
+        return (list == null || list.size() == 0) ? true : false;
+    }
+
     public static List<String> rangeVertices(UniGraph graph, int start, int end) {
         List<String> ids = graph.getBaseStore().lrange(VERTEX_IT_LIST, start, end);
+        if (isEmptyList(ids))
+            return new ArrayList<>();
         String[] tmp = ids.stream().toArray(String[]::new);
         return graph.getBaseStore().hmget(VERTEX_MAP, tmp);
     }
@@ -230,11 +236,15 @@ public class UniHelper {
     public static List<String> multiVertices(UniGraph graph, Object... ids) {
 //        String[] tmp = Arrays.stream(ids).toArray(String[]::new);
         String[] tmp = Arrays.stream(ids).map(id -> id.toString()).toArray(String[]::new);
+        if (tmp == null || tmp.length == 0)
+            return new ArrayList<>();
         return graph.getBaseStore().hmget(VERTEX_MAP, tmp);
     }
 
     public static List<String> rangeEdges(UniGraph graph, int start, int end) {
         List<String> ids = graph.getBaseStore().lrange(EDGE_IT_LIST, start, end);
+        if (isEmptyList(ids))
+            return new ArrayList<>();
         String[] tmp = ids.stream().toArray(String[]::new);
         return graph.getBaseStore().hmget(EDGE_MAP, tmp);
     }
