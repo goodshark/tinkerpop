@@ -94,7 +94,7 @@ public class UniVertexIterator implements Iterator<Vertex> {
                 vStrs = UniHelper.multiVertices(graph, ids);
             }
             fillVertex(vStrs);
-            curStart = curStart + bufSize;
+            curStart = curStart + bufSize + 1;
         } else {
             while (curLabelIndex < edgeLabels.length) {
                 vStrs = UniHelper.getVertexVertices(graph, vId, direction, edgeLabels[curLabelIndex]);

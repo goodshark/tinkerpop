@@ -102,7 +102,7 @@ public class UniEdgeIterator implements Iterator<Edge> {
                 idEdgeStrs = UniHelper.rangeEdges(graph, curStart, curStart+bufSize);
             }
             fillEdges(idEdgeStrs);
-            curStart += bufSize;
+            curStart += bufSize + 1;
         }
     }
 
