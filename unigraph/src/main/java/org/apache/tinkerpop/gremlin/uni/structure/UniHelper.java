@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tinkerpop.gremlin.structure.Direction;
 import org.apache.tinkerpop.gremlin.structure.Edge;
+import org.apache.tinkerpop.gremlin.structure.Element;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.uni.structure.utils.UniEdgeIterator;
 
@@ -30,9 +31,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Stream;
-
-import static org.apache.tinkerpop.gremlin.structure.Direction.OUT;
 
 public class UniHelper {
     private final static String VERTEX_ID_PERFIX = "uni-vertex-id";
@@ -45,6 +43,10 @@ public class UniHelper {
     private final static String EDGE_IT_LIST = "uni-edges-list";
 
     private final static ObjectMapper om = new ObjectMapper();
+
+    static {
+        om.enableDefaultTyping();
+    }
 
     // generate ID
     public static long getVertexId(UniGraph graph) {
@@ -60,29 +62,28 @@ public class UniHelper {
     }
 
     // serialize
-    public static String serializeVertex(Vertex v) {
-        String vStr = "";
+    public static String serializeElement(Element element) {
+        String elementStr = "";
         try {
-            om.enableDefaultTyping();
-            vStr = om.writeValueAsString(v);
+            elementStr = om.writeValueAsString(element);
         } catch (JsonProcessingException e) {
             System.err.println(e);
         }
-        return vStr;
+        return elementStr;
     }
 
-    public static UniVertex deserializeVertex(String vStr) {
-        UniVertex v = null;
+    public static <T> T deserializeElement(String jsonStr, Class<T> clazz) {
+        T element = null;
         try {
             // TODO restore some info ?
-            v = om.readValue(vStr, UniVertex.class);
+            element = om.readValue(jsonStr, clazz);
         } catch (IOException e) {
             System.err.println(e);
         }
-        return v;
+        return element;
     }
 
-    public static String serializeEdge(Edge edge) {
+    /*public static String serializeEdge(Edge edge) {
         String eStr = "";
         try {
             om.enableDefaultTyping();
@@ -101,12 +102,12 @@ public class UniHelper {
             System.err.println(e);
         }
         return edge;
-    }
+    }*/
 
     // store Vertex & Edge
     public static boolean createVertex(UniGraph graph, Vertex v) {
         final String vertexId = String.valueOf(v.id());
-        String vStr = UniHelper.serializeVertex(v);
+        String vStr = UniHelper.serializeElement(v);
         if (vStr.isEmpty())
             return false;
         graph.getBaseStore().hset(VERTEX_MAP, vertexId, vStr);
@@ -135,7 +136,7 @@ public class UniHelper {
     }
 
     public static boolean createEdge(UniGraph graph, Edge e) {
-        String eStr = UniHelper.serializeEdge(e);
+        String eStr = UniHelper.serializeElement(e);
         if (eStr.isEmpty())
             return false;
         graph.getBaseStore().hset(EDGE_MAP, e.id().toString(), eStr);

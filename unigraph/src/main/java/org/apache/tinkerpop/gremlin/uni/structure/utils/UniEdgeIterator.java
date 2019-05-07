@@ -108,7 +108,7 @@ public class UniEdgeIterator implements Iterator<Edge> {
 
     private void fillEdges(List<String> edgeStrs) {
         for (String edgeStr: edgeStrs) {
-            UniEdge edge = UniHelper.deserializeEdge(edgeStr);
+            UniEdge edge = UniHelper.deserializeElement(edgeStr, UniEdge.class);
             if (edge != null)
                 edge.bondGraph(graph);
                 edges.add(edge);

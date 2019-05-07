@@ -108,7 +108,7 @@ public class UniVertexIterator implements Iterator<Vertex> {
 
     private void fillVertex(List<String> vStrs) {
         for (String vStr : vStrs) {
-            UniVertex v = UniHelper.deserializeVertex(vStr);
+            UniVertex v = UniHelper.deserializeElement(vStr, UniVertex.class);
             if (v != null)
                 v.bondGraph(graph);
                 vertices.add(v);
